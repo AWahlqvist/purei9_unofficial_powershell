@@ -12,24 +12,27 @@ function Get-Purei9VacuumMap {
         The credential to use to authenticate the request
 
         .PARAMETER RobotId
-        The vaccuum robot associated with the map. Can be omitted if only one robot 
-        is associated with the account (the function will then fetch the robot id
-         automatically)
+        The vaccuum robot id associated with the map. Can be omitted (the function
+        will then fetch the robots assocaited with the account automatically)
+
+        .PARAMETER RobotName
+        The vaccuum robot name associated with the map. Can be omitted (the function
+        will then fetch the robots assocaited with the account automatically)
 
         .EXAMPLE
         Get-Purei9VacuumMap -Credential $MyCredential
 
-        Fetches maps associated with the $MyCredential
+        Fetches maps associated with $MyCredential
 
         .EXAMPLE
         Get-Purei9VacuumMap -Credential $MyCredential -RobotId 912345678901234567890123
 
-        Fetches maps associated with the $MyCredential and robot with id 912345678901234567890123
+        Fetches maps associated with $MyCredential and robot with id 912345678901234567890123
 
         .EXAMPLE
         Get-Purei9VacuumMap -Credential $MyCredential -RobotName MyVacuumRobot
 
-        Fetches maps associated with the $MyCredential and robot with name MyVacuumRobot
+        Fetches maps associated with $MyCredential and robot with name MyVacuumRobot
     #>
 
     [CmdletBinding(DefaultParameterSetName = 'ByName')]
@@ -37,11 +40,11 @@ function Get-Purei9VacuumMap {
         [Parameter(Mandatory=$true)]
         [PSCredential] $Credential,
 
-        [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ById')]
+        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ById')]
         [Alias('pncId')]
         [String[]] $RobotId,
 
-        [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ByName')]
+        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ByName')]
         [Alias('applianceName')]
         [String[]] $RobotName
     )
