@@ -70,11 +70,18 @@ function Get-Purei9VacuumZoneStatus {
             foreach ($vacuumMap in $vacuumMaps) {
 
                 foreach ($zone in $vacuumMaps.zones) {
-                    $latestSession = $vacuumSessions | Where-Object {
-                        $_.cleaningSession.zoneStatus.id -eq $zone.id -and
-                        $_.cleaningSession.zoneStatus.status -eq 'finished'
-                    } | Sort-Object timestamp -Descending | Select-Object -First 1
-    
+                    foreach ($vacuumSession in $vacuumSessions) {
+                        $zoneCleanedThisSession = $vacuumSession.cleaningSession.zoneStatus | Where-Object { $_.id -eq $zone.id -and $_.status -eq 'finished' }
+
+                        if ($zoneCleanedThisSession) {
+                            $latestSession = $vacuumSession
+                            break
+                        }
+                        else {
+                            $latestSession = $null
+                        }
+                    }
+
                     if ($latestSession.cleaningSession.eventTime) {
                         try {
                             $latestSessionDateTime = Get-Date $latestSession.cleaningSession.eventTime
