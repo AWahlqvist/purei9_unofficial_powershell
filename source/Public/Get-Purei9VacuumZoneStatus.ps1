@@ -53,14 +53,18 @@ function Get-Purei9VacuumZoneStatus {
     begin { }
 
     process {
+        $vacuumRobots = Get-Purei9VacuumRobot -Credential $Credential
+
         if (-not $RobotId) {
-            $vacuumRobots = Get-Purei9VacuumRobot -Credential $Credential
 
             if ($RobotName) {
-                $vacuumRobots = Get-Purei9VacuumRobot -Credential $Credential | Where-Object { $_.applianceName -in $RobotName }
+                $vacuumRobots = $vacuumRobots | Where-Object { $_.applianceName -in $RobotName }
             }
 
             $Robots = $vacuumRobots
+        }
+        else {
+            $Robots = $vacuumRobots | Where-Object { $_.pncId -eq $RobotId }
         }
 
         foreach ($vac in $Robots) {
