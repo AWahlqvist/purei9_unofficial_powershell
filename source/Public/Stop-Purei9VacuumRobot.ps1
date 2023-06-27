@@ -26,7 +26,7 @@ function Stop-Purei9VacuumRobot {
         [PSCredential] $Credential,
 
         [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ByRobotId')]
-        [Alias('pncId')]
+        [Alias('applianceId')]
         [String[]] $RobotId,
 
         [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ByRobotName')]
@@ -48,10 +48,10 @@ function Stop-Purei9VacuumRobot {
                 throw "Multiple robots detected, please specify robot using RobotId or a unique RobotName"
             }
 
-            $RobotId = $vacuumRobots.pncId
+            $RobotId = $vacuumRobots.applianceId
         }
 
-        $uriEnding = "/Appliances/$RobotId/Commands"
+        $uriEnding = "/appliance/api/v2/appliances/$RobotId/command"
         $requestHash = GetApiRequestSplattingHash -UriEnding $uriEnding -Method Put
 
         $body = @{

@@ -41,7 +41,7 @@ function Get-Purei9VacuumMap {
         [PSCredential] $Credential,
 
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ById')]
-        [Alias('pncId')]
+        [Alias('applianceId')]
         [String[]] $RobotId,
 
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ByName')]
@@ -56,14 +56,14 @@ function Get-Purei9VacuumMap {
             $vacuumRobots = Get-Purei9VacuumRobot -Credential $Credential
 
             if ($RobotName) {
-                $vacuumRobots = Get-Purei9VacuumRobot -Credential $Credential | Where-Object { $_.applianceName -in $RobotName }
+                $vacuumRobots = Get-Purei9VacuumRobot -Credential $Credential | Where-Object { $_.applianceData.applianceName -in $RobotName }
             }
 
-            $RobotId = $vacuumRobots.pncId
+            $RobotId = $vacuumRobots.applianceId
         }
 
         foreach ($vacId in $RobotId) {
-            $uriEnding = "/robots/$vacId/interactivemaps"
+            $uriEnding = "/purei/api/v2/appliances/$vacId/interactive-maps"
             $requestHash = GetApiRequestSplattingHash -UriEnding $uriEnding
     
             $invokeApiRequestSplat = @{

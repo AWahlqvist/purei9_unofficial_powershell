@@ -24,7 +24,7 @@ function Get-Purei9VacuumRobot {
     begin { }
 
     process {
-        $uriEnding = "/Domains/Appliances"
+        $uriEnding = "/appliance/api/v2/appliances"
         $requestHash = GetApiRequestSplattingHash -UriEnding $uriEnding
 
         $invokeApiRequestSplat = @{
@@ -34,7 +34,7 @@ function Get-Purei9VacuumRobot {
         $appliances = InvokeApiRequest @invokeApiRequestSplat
 
         foreach ($appliance in $appliances) {
-            $uriEnding = "/AppliancesInfo/$($appliance.pncId)"
+            $uriEnding = $uriEnding + "/$($appliance.applianceId)/info"
             $requestHash = GetApiRequestSplattingHash -UriEnding $uriEnding
             
             $invokeApiRequestSplat = @{
@@ -43,12 +43,12 @@ function Get-Purei9VacuumRobot {
             }
             $applianceInfo = InvokeApiRequest @invokeApiRequestSplat
         
-            $uriEnding = "/Appliances/$($appliance.pncId)"
+            $uriEnding = "/appliance/api/v2/appliances/$($appliance.applianceId)"
             $requestHash = GetApiRequestSplattingHash -UriEnding $uriEnding
             $invokeApiRequestSplat.RequestSplattingHash = $requestHash
             $applianceDetails = InvokeApiRequest @invokeApiRequestSplat
             
-            $batteryLevel = switch ($applianceDetails.twin.properties.reported.batteryStatus) {
+            $batteryLevel = switch ($applianceDetails.properties.reported.batteryStatus) {
                 1 { "Dead" }
                 2 { "CriticalLow" }
                 3 { "Low" }
@@ -58,14 +58,14 @@ function Get-Purei9VacuumRobot {
                 Default { "Unknown" }
             }
 
-            $powerMode = switch ($applianceDetails.twin.properties.reported.powerMode) {
+            $powerMode = switch ($applianceDetails.properties.reported.powerMode) {
                 1 { "Low" }
                 2 { "Medium/Smart" }
                 3 { "High" }
                 Default { "Unknown" }
             }
 
-            $robotStatus = switch ($applianceDetails.twin.properties.reported.robotStatus) {
+            $robotStatus = switch ($applianceDetails.properties.reported.robotStatus) {
                  1 { "Cleaning" }
                  2 { "Paused_Cleaning" }
                  3 { "Spot_Cleaning" }
@@ -83,10 +83,10 @@ function Get-Purei9VacuumRobot {
                 Default { "Unknown" }
             }
 
-            if ($applianceInfo.device -eq 'ROBOTIC_VACUUM_CLEANER') {
+            if ($applianceInfo.deviceType -eq 'ROBOTIC_VACUUM_CLEANER') {
                 $appliance | Add-Member -MemberType NoteProperty -Name BatteryLevel -Value $batteryLevel
                 $appliance | Add-Member -MemberType NoteProperty -Name RobotStatus -Value $robotStatus
-                $appliance | Add-Member -MemberType NoteProperty -Name DustbinStatus -Value $applianceDetails.twin.properties.reported.dustbinStatus
+                $appliance | Add-Member -MemberType NoteProperty -Name DustbinStatus -Value $applianceDetails.properties.reported.dustbinStatus
                 $appliance | Add-Member -MemberType NoteProperty -Name PowerMode -Value $powerMode
                 $appliance | Add-Member -MemberType NoteProperty -Name info -Value $applianceInfo
                 $appliance | Add-Member -MemberType NoteProperty -Name details -Value $applianceDetails

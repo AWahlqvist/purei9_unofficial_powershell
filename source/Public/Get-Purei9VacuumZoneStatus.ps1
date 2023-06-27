@@ -39,7 +39,7 @@ function Get-Purei9VacuumZoneStatus {
         [PSCredential] $Credential,
 
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ById')]
-        [Alias('pncId')]
+        [Alias('applianceId')]
         [String[]] $RobotId,
 
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ByName')]
@@ -64,12 +64,12 @@ function Get-Purei9VacuumZoneStatus {
             $Robots = $vacuumRobots
         }
         else {
-            $Robots = $vacuumRobots | Where-Object { $_.pncId -eq $RobotId }
+            $Robots = $vacuumRobots | Where-Object { $_.applianceId -eq $RobotId }
         }
 
         foreach ($vac in $Robots) {
-            $vacuumMaps = Get-Purei9VacuumMap -Credential $Credential -RobotId $vac.pncId
-            $vacuumSessions = Get-Purei9VacuumRobotSession -Credential $Credential -RobotId $vac.pncId | Where-Object { $_.timestamp -ge (Get-Date).AddDays(-$IncludeSessionsSinceDays) }
+            $vacuumMaps = Get-Purei9VacuumMap -Credential $Credential -RobotId $vac.applianceId
+            $vacuumSessions = Get-Purei9VacuumRobotSession -Credential $Credential -RobotId $vac.applianceId | Where-Object { $_.timestamp -ge (Get-Date).AddDays(-$IncludeSessionsSinceDays) }
 
             foreach ($vacuumMap in $vacuumMaps) {
 
@@ -100,8 +100,8 @@ function Get-Purei9VacuumZoneStatus {
                     }
     
                     [PSCustomObject] @{
-                        RobotId = $vac.pncId
-                        RobotName = $vac.applianceName
+                        RobotId = $vac.applianceId
+                        RobotName = $vac.applianceData.applianceName
                         MapId = $vacuumMap.id
                         MapName = $vacuumMap.name
                         ZoneId = $zone.id

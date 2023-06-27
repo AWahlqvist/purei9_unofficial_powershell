@@ -35,7 +35,7 @@ function GetApiRequestSplattingHash {
         Headers     = @{
             Authorization = ''
         }
-        Uri         = 'https://api.delta.electrolux.com/api' + $UriEnding
+        Uri         = 'https://api.ocp.electrolux.one' + $UriEnding
         ContentType = 'application/json'
         Method      = $Method
         ErrorAction = 'Stop'

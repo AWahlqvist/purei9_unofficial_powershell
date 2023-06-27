@@ -29,7 +29,7 @@ function Get-Purei9VacuumRobotSession {
         [PSCredential] $Credential,
 
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ById')]
-        [Alias('pncId')]
+        [Alias('applianceId')]
         [String[]] $RobotId,
 
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'ByName')]
@@ -47,11 +47,11 @@ function Get-Purei9VacuumRobotSession {
                 $vacuumRobots = Get-Purei9VacuumRobot -Credential $Credential | Where-Object { $_.applianceName -in $RobotName }
             }
 
-            $RobotId = $vacuumRobots.pncId
+            $RobotId = $vacuumRobots.applianceId
         }
 
         foreach ($vacId in $RobotId) {
-            $uriEnding = "/robots/$vacId/history"
+            $uriEnding = "/purei/api/v2/appliances/$vacId/history"
             $requestHash = GetApiRequestSplattingHash -UriEnding $uriEnding
     
             $invokeApiRequestSplat = @{

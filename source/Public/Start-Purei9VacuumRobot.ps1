@@ -71,7 +71,7 @@ function Start-Purei9VacuumRobot {
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'InSpecificZoneById')]
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'CleanEverywhereByRobotId')]
         [Parameter(Mandatory=$false, ParameterSetName = 'CleanAllZonesOrderedByNeed')]
-        [Alias('pncId')]
+        [Alias('applianceId')]
         [String] $RobotId,
 
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'InSpecificZoneByName')]
@@ -119,10 +119,10 @@ function Start-Purei9VacuumRobot {
                 throw "Multiple robots detected, please specify robot using RobotId or a unique RobotName"
             }
 
-            $RobotId = $vacuumRobots.pncId
+            $RobotId = $vacuumRobots.applianceId
         }
 
-        $uriEnding = "/Appliances/$RobotId/Commands"
+        $uriEnding = "/appliance/api/v2/appliances/$RobotId/command"
         $requestHash = GetApiRequestSplattingHash -UriEnding $uriEnding -Method Put
 
         $invokeApiRequestSplat = @{
