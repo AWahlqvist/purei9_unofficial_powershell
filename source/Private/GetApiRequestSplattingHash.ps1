@@ -43,5 +43,9 @@ function GetApiRequestSplattingHash {
         Verbose     = $false
     }
 
+    if ($PSVersionTable.PSVersion.Major -ge 6) {
+        $hashToReturn.Add('SkipHeaderValidation', $true)
+    }
+
     $hashToReturn
 }

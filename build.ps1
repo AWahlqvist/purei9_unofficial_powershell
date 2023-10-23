@@ -5,9 +5,9 @@
 
 $ScriptRoot = $PSScriptRoot
 
-$ReleaseNotes = "Support for Electrolux One API"
+$ReleaseNotes = "Support for Powershell Core"
 $ModuleName = 'Purei9_Unofficial'
-$ModuleVersion = '0.0.2'
+$ModuleVersion = '0.0.3'
 $CompatiblePSEditions = @('Core', 'Desktop')
 $PowerShellVersion = '5.1'
 $ModuleGuid = 'f8000c8b-77a4-4663-aa3d-8b1ec8d60ccd'
